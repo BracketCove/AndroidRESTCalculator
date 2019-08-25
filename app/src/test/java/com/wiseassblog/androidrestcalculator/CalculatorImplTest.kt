@@ -12,7 +12,7 @@ class CalculatorImplTest {
 
 
     private val requestFake = FakeRequestApiImpl()
-    private val vmFake = CalculatorViewModelFake()
+    private val logicFake = CalculatorLogicFakeImpl()
     private lateinit var calc: CalculatorImpl
 
 
@@ -30,9 +30,9 @@ class CalculatorImplTest {
     fun `On Response Successful`() = runBlocking {
         calc = CalculatorImpl(requestFake)
 
-        calc.evaluateExpression(VALID_EXPRESSION, vmFake::updateDisplay)
+        calc.evaluateExpression(VALID_EXPRESSION, logicFake::handleResult)
 
-        val result = vmFake.resultWrapper
+        val result = logicFake.result
         if (result is ResultWrapper.Success){
             assertEquals(result.value, "4" )
         } else {
@@ -50,9 +50,9 @@ class CalculatorImplTest {
     fun `On Response exception`() = runBlocking {
         calc = CalculatorImpl(requestFake)
         requestFake.succeed = false
-        calc.evaluateExpression(INVALID_EXPRESSION, vmFake::updateDisplay)
+        calc.evaluateExpression(INVALID_EXPRESSION, logicFake::handleResult)
 
-        val result = vmFake.resultWrapper
+        val result = logicFake.result
         if (result is ResultWrapper.Error){
             assertTrue(true)
         } else {

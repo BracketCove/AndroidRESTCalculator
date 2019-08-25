@@ -1,24 +1,18 @@
 package com.wiseassblog.androidrestcalculator.buildlogic
 
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProviders
+import com.wiseassblog.androidrestcalculator.CalculatorActivity
 import com.wiseassblog.androidrestcalculator.data.CalculatorImpl
 import com.wiseassblog.androidrestcalculator.data.RequestApiImpl
-import com.wiseassblog.androidrestcalculator.userinterface.CalculatorFragment
 import com.wiseassblog.androidrestcalculator.userinterface.CalculatorLogic
-import com.wiseassblog.androidrestcalculator.userinterface.CalculatorViewModel
+import com.wiseassblog.androidrestcalculator.userinterface.ICalculatorUI
 import kotlinx.coroutines.Dispatchers
 
 object DependencyProvider {
-    fun provideLogic(main: AppCompatActivity,  view: CalculatorFragment) {
-
-       val logic = CalculatorLogic(
-            view,
-            ViewModelProviders.of(main).get(CalculatorViewModel::class.java),
+    fun provideLogic(main: CalculatorActivity): ICalculatorUI.Logic {
+        return CalculatorLogic(
+            main,
             CalculatorImpl(RequestApiImpl),
             Dispatchers.Main
         )
-
-        view.logic = logic
     }
 }
