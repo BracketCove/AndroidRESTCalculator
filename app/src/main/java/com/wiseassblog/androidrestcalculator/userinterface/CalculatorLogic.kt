@@ -1,46 +1,44 @@
 package com.wiseassblog.androidrestcalculator.userinterface
 
 import com.wiseassblog.androidrestcalculator.domain.ICalculator
+import com.wiseassblog.androidrestcalculator.domain.ResultWrapper
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
-import kotlin.properties.Delegates
 
 class CalculatorLogic(
     val view: ICalculatorUI.View,
-    val vm: ICalculatorUI.ViewModel,
     val calc:ICalculator,
     val dispatcher: CoroutineDispatcher
 ):ICalculatorUI.Logic, CoroutineScope {
 
     override fun handleViewEvent(event: ViewEvent) {
         when (event){
-            is ViewEvent.Bind -> getViewState()
             is ViewEvent.Evaluate -> evaluateExpression()
-            is ViewEvent.Delete -> vm.deleteSymbol()
-            is ViewEvent.DeleteAll -> vm.deleteAll()
-            is ViewEvent.Input -> vm.appendSymbol(event.input)
+            is ViewEvent.Delete -> deleteChar()
+            is ViewEvent.DeleteAll -> view.display = ""
+            is ViewEvent.Input -> view.display = view.display + event.input
         }
 
     }
 
+    private fun deleteChar() {
+        val currentExpression = view.display
+
+        if (currentExpression.isNotEmpty()) view.display = currentExpression.dropLast(1)
+    }
+
     private fun evaluateExpression() = launch {
-        calc.evaluateExpression(vm.getDisplay(), vm::updateDisplay)
+        calc.evaluateExpression(view.display, ::handleResult)
     }
 
-    private fun getViewState() {
-        vm.logic = this
-        view.setDisplay(vm.getDisplay())
-    }
-
-    override fun handleVmUpdate(display: String) {
-        view.setDisplay(display)
-    }
-
-    override fun handleException(exception: Exception) {
-        view.showError(GENERIC_ERROR_MESSAGE)
+    override fun handleResult(result: ResultWrapper<Exception, String>) {
+        when (result){
+            is ResultWrapper.Success -> view.display = result.value
+            is ResultWrapper.Error -> view.showError(GENERIC_ERROR_MESSAGE)
+        }
     }
 
     protected val jobTracker: Job = Job()

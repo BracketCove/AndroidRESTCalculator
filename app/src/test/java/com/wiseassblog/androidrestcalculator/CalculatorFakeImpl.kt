@@ -3,7 +3,7 @@ package com.wiseassblog.androidrestcalculator
 import com.wiseassblog.androidrestcalculator.domain.ICalculator
 import com.wiseassblog.androidrestcalculator.domain.ResultWrapper
 
-class CalculatorImplFake : ICalculator {
+class CalculatorFakeImpl : ICalculator {
 
     var succeed = false
 
