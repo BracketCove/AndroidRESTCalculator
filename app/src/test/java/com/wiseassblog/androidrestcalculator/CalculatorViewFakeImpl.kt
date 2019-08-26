@@ -1,8 +1,6 @@
 package com.wiseassblog.androidrestcalculator
 
-import android.widget.Toast
 import com.wiseassblog.androidrestcalculator.userinterface.ICalculatorUI
-import kotlinx.android.synthetic.main.activity_calculator.*
 
 class CalculatorViewFakeImpl : ICalculatorUI.View {
 

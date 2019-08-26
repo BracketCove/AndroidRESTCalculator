@@ -2,7 +2,6 @@ package com.wiseassblog.androidrestcalculator.data
 
 import com.wiseassblog.androidrestcalculator.domain.ICalculator
 import com.wiseassblog.androidrestcalculator.domain.ResultWrapper
-import java.lang.Exception
 
 class CalculatorImpl(
     val request: IRequestApi
